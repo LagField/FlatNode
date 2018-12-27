@@ -1,0 +1,43 @@
+namespace FlatNode.Runtime.Flat;
+
+table NodeInputFieldInfo{
+    fieldName:string;
+	targetNodeId:int;
+	targetPortId:int;
+	valueTypeName:string;
+	valueString:string;
+}
+
+table NodeFlowOutPortInfo{
+	targetNodeIds:[int];
+}
+
+table NodeInfo{
+	nodeId:int;
+	nodeClassTypeName:string;
+
+	inputPortInfos:[NodeInputFieldInfo];
+	flowOutPortInfos:[NodeFlowOutPortInfo];
+	
+	//入口节点和create sequence节点独有
+	rightSideNodeIds:[int];
+}
+
+table GraphVariableInfo{
+    id:int;
+    typeName:string;
+    valueString:string;
+}
+
+table GraphInfo{
+	graphId:int;
+	//所有节点
+	nodes:[NodeInfo];
+	//通用节点id
+	commonNodeIds:[int];
+	//入口节点id
+	entranceNodeIds:[int];
+	
+	//技能变量信息
+	graphVariableInfos:[GraphVariableInfo];
+}
