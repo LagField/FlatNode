@@ -1,22 +1,24 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Networking.Types;
 
 namespace FlatNode.Runtime
 {
-    public class SkillSequence
+    /// <summary>
+    /// 节点序列
+    /// </summary>
+    public class NodeSequence
     {
         public NodeBase RootNode { get; private set; }
         protected Dictionary<int, NodeBase> sequenceNodeDictionary;
 
-        public GraphBehaviourBase GraphBehaviourBase { get; private set; }
-        private SkillSequence parentSequence;
+        public GraphBehaviour GraphBehaviour { get; private set; }
+        private NodeSequence parentSequence;
 
         protected List<NodeBase> runningNodeList;
         protected List<NodeBase> executeFinishNodeList;
 
-        protected List<SkillSequence> runningChildSequenceList;
-        protected Dictionary<int, Queue<SkillSequence>> childSequencePool;
+        protected List<NodeSequence> runningChildSequenceList;
+        protected Dictionary<int, Queue<NodeSequence>> childSequencePool;
 
         public bool IsFinish
         {
@@ -38,92 +40,67 @@ namespace FlatNode.Runtime
         }
 
         /// <summary>
-        /// 空sequence构造函数
-        /// </summary>
-        /// <param name="graphBehaviourBase"></param>
-        /// <param name="parentSequence"></param>
-        public SkillSequence(GraphBehaviourBase graphBehaviourBase, SkillSequence parentSequence)
-        {
-            this.parentSequence = parentSequence;
-            GraphBehaviourBase = graphBehaviourBase;
-        }
-
-        /// <summary>
-        /// 创建skillSequence,会重新创建一个rootNode实例
+        /// 创建NodeSequence,会重新创建一个rootNode实例
         /// </summary>
         /// <param name="rootNodeId"></param>
         /// <param name="sequenceNodeIds"></param>
-        /// <param name="graphBehaviourBase"></param>
+        /// <param name="graphBehaviour"></param>
         /// <param name="parentSequence"></param>
-        public SkillSequence(int rootNodeId, int[] sequenceNodeIds, GraphBehaviourBase graphBehaviourBase, SkillSequence parentSequence)
+        public NodeSequence(int rootNodeId, int[] sequenceNodeIds, GraphBehaviour graphBehaviour, NodeSequence parentSequence)
         {
-            GraphBehaviourBase = graphBehaviourBase;
-            RootNode = graphBehaviourBase.DeserializeNode(rootNodeId);
+            GraphBehaviour = graphBehaviour;
+            RootNode = graphBehaviour.DeserializeNode(rootNodeId);
             this.parentSequence = parentSequence;
             
-            RootNode.SetSkillSequence(this);
-            RootNode.SetSkill(graphBehaviourBase);
+            RootNode.SetNodeSequence(this);
+            RootNode.SetGraphBehaviour(graphBehaviour);
 
             sequenceNodeDictionary = new Dictionary<int, NodeBase>();
             sequenceNodeDictionary.Add(RootNode.nodeId,RootNode);
             for (int i = 0; i < sequenceNodeIds.Length; i++)
             {
-                NodeBase sequenceNode = graphBehaviourBase.DeserializeNode(sequenceNodeIds[i]);
-                sequenceNode.SetSkillSequence(this);
-                sequenceNode.SetSkill(graphBehaviourBase);
+                NodeBase sequenceNode = graphBehaviour.DeserializeNode(sequenceNodeIds[i]);
+                sequenceNode.SetNodeSequence(this);
+                sequenceNode.SetGraphBehaviour(graphBehaviour);
                 sequenceNodeDictionary.Add(sequenceNodeIds[i], sequenceNode);
             }
 
             runningNodeList = new List<NodeBase>();
             executeFinishNodeList = new List<NodeBase>();
 
-            runningChildSequenceList = new List<SkillSequence>();
+            runningChildSequenceList = new List<NodeSequence>();
         }
         
         /// <summary>
-        /// 创建skillSequence,会共用传入的rootNode
+        /// 创建NodeSequence,会共用传入的rootNode
         /// </summary>
         /// <param name="rootNode"></param>
         /// <param name="sequenceNodeIds"></param>
-        /// <param name="graphBehaviourBase"></param>
+        /// <param name="graphBehaviour"></param>
         /// <param name="parentSequence"></param>
-        public SkillSequence(NodeBase rootNode, int[] sequenceNodeIds, GraphBehaviourBase graphBehaviourBase, SkillSequence parentSequence)
+        public NodeSequence(NodeBase rootNode, int[] sequenceNodeIds, GraphBehaviour graphBehaviour, NodeSequence parentSequence)
         {
-            GraphBehaviourBase = graphBehaviourBase;
+            GraphBehaviour = graphBehaviour;
             RootNode = rootNode;
             this.parentSequence = parentSequence;
             
-            RootNode.SetSkill(graphBehaviourBase);
-            RootNode.SetSkillSequence(this);
+            RootNode.SetGraphBehaviour(graphBehaviour);
+            RootNode.SetNodeSequence(this);
 
             sequenceNodeDictionary = new Dictionary<int, NodeBase>();
             sequenceNodeDictionary.Add(RootNode.nodeId,RootNode);
             for (int i = 0; i < sequenceNodeIds.Length; i++)
             {
-                NodeBase sequenceNode = graphBehaviourBase.DeserializeNode(sequenceNodeIds[i]);
-                sequenceNode.SetSkillSequence(this);
-                sequenceNode.SetSkill(graphBehaviourBase);
+                NodeBase sequenceNode = graphBehaviour.DeserializeNode(sequenceNodeIds[i]);
+                sequenceNode.SetNodeSequence(this);
+                sequenceNode.SetGraphBehaviour(graphBehaviour);
                 sequenceNodeDictionary.Add(sequenceNodeIds[i], sequenceNode);
             }
 
             runningNodeList = new List<NodeBase>();
             executeFinishNodeList = new List<NodeBase>();
 
-            runningChildSequenceList = new List<SkillSequence>();
-        }
-
-        /// <summary>
-        /// 处理不可运行sequence，用于common节点的保存
-        /// </summary>
-        /// <param name="commonNodeList"></param>
-        /// <param name="graphBehaviourBase"></param>
-        public SkillSequence(List<NodeBase> commonNodeList, GraphBehaviourBase graphBehaviourBase)
-        {
-            sequenceNodeDictionary = new Dictionary<int, NodeBase>();
-            for (int i = 0; i < commonNodeList.Count; i++)
-            {
-                sequenceNodeDictionary.Add(commonNodeList[i].nodeId ,commonNodeList[i]);   
-            }
+            runningChildSequenceList = new List<NodeSequence>();
         }
 
         public void Start()
@@ -167,34 +144,34 @@ namespace FlatNode.Runtime
             {
                 for (int i = runningChildSequenceList.Count - 1; i >= 0; i--)
                 {
-                    SkillSequence skillSequence = runningChildSequenceList[i];
-                    skillSequence.Update(deltaTime);
+                    NodeSequence nodeSequence = runningChildSequenceList[i];
+                    nodeSequence.Update(deltaTime);
 
-                    if (skillSequence.IsFinish)
+                    if (nodeSequence.IsFinish)
                     {
-                        skillSequence.Reset();
+                        nodeSequence.Reset();
 
                         if (childSequencePool == null)
                         {
-                            childSequencePool = new Dictionary<int, Queue<SkillSequence>>();
+                            childSequencePool = new Dictionary<int, Queue<NodeSequence>>();
                         }
                         
                         //放回池中
-                        if (childSequencePool.ContainsKey(skillSequence.RootNode.nodeId))
+                        if (childSequencePool.ContainsKey(nodeSequence.RootNode.nodeId))
                         {
-                            Queue<SkillSequence> poolQueue = childSequencePool[skillSequence.RootNode.nodeId];
+                            Queue<NodeSequence> poolQueue = childSequencePool[nodeSequence.RootNode.nodeId];
                             if (poolQueue == null)
                             {
-                                poolQueue = new Queue<SkillSequence>();
+                                poolQueue = new Queue<NodeSequence>();
                             }
 
-                            poolQueue.Enqueue(skillSequence);
+                            poolQueue.Enqueue(nodeSequence);
                         }
                         else
                         {
-                            Queue<SkillSequence> poolQueue = new Queue<SkillSequence>();
-                            poolQueue.Enqueue(skillSequence);
-                            childSequencePool.Add(skillSequence.RootNode.nodeId, poolQueue);
+                            Queue<NodeSequence> poolQueue = new Queue<NodeSequence>();
+                            poolQueue.Enqueue(nodeSequence);
+                            childSequencePool.Add(nodeSequence.RootNode.nodeId, poolQueue);
                         }
 
                         runningChildSequenceList.RemoveAt(i);
@@ -245,27 +222,26 @@ namespace FlatNode.Runtime
             }
 #endif
 
-//            Debug.LogFormat("skill {0} flow to node {1}",Skill.skillProperty.skillId,nodeId);
             //进入创建序列流程
             if (targetNode.isCreateSequenceNode)
             {
                 if (childSequencePool == null)
                 {
-                    childSequencePool = new Dictionary<int, Queue<SkillSequence>>();
+                    childSequencePool = new Dictionary<int, Queue<NodeSequence>>();
                 }
 
                 bool needCreateNewSequence = true;
                 //尝试从池中取
                 if (childSequencePool.ContainsKey(nodeId))
                 {
-                    Queue<SkillSequence> poolSequence = childSequencePool[nodeId];
+                    Queue<NodeSequence> poolSequence = childSequencePool[nodeId];
                     if (poolSequence != null && poolSequence.Count > 0)
                     {
 //                        Debug.Log("cache hit");
-                        SkillSequence skillSequence = poolSequence.Dequeue();
-                        skillSequence.Reset();
-                        runningChildSequenceList.Add(skillSequence);
-                        skillSequence.Start();
+                        NodeSequence nodeSequence = poolSequence.Dequeue();
+                        nodeSequence.Reset();
+                        runningChildSequenceList.Add(nodeSequence);
+                        nodeSequence.Start();
 
                         needCreateNewSequence = false;
                     }
@@ -274,10 +250,10 @@ namespace FlatNode.Runtime
                 if (needCreateNewSequence)
                 {
                     CreateSequenceNode createSequenceNode = targetNode as CreateSequenceNode;
-                    SkillSequence newSkillSequence = new SkillSequence(nodeId, createSequenceNode.rightSideNodeIds, GraphBehaviourBase, this);
+                    NodeSequence newNodeSequence = new NodeSequence(nodeId, createSequenceNode.rightSideNodeIds, GraphBehaviour, this);
 
-                    runningChildSequenceList.Add(newSkillSequence);
-                    newSkillSequence.Start();
+                    runningChildSequenceList.Add(newNodeSequence);
+                    newNodeSequence.Start();
                 }
             }
             else
@@ -309,7 +285,7 @@ namespace FlatNode.Runtime
         {
             NodeBase targetNode = null;
             //优先查找技能序列树中的节点
-            SkillSequence sequence = this;
+            NodeSequence sequence = this;
             while (sequence != null)
             {
                 targetNode = sequence.GetNode(nodeId);
@@ -323,7 +299,7 @@ namespace FlatNode.Runtime
             }
             
             //查找公共节点
-            targetNode = GraphBehaviourBase.GetCommonNode(nodeId);
+            targetNode = GraphBehaviour.GetCommonNode(nodeId);
 
             if (targetNode == null)
             {
@@ -337,7 +313,7 @@ namespace FlatNode.Runtime
 #if UNITY_EDITOR
             if (!sequenceNodeDictionary.ContainsKey(node.nodeId))
             {
-                Debug.LogErrorFormat("skillsequence中不包含nodeid {0} 的节点", node.nodeId);
+                Debug.LogErrorFormat("nodesequence中不包含nodeid {0} 的节点", node.nodeId);
                 return;
             }
 

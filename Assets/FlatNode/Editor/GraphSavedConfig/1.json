@@ -1,0 +1,253 @@
+{
+    "graphId": 1,
+    "graphName": "测试CreateSequence",
+    "graphDescription": "测试CreateSequence",
+    "nodesList": [
+        {
+            "nodeId": 5,
+            "positionInGraph": {
+                "x": 749.0,
+                "y": 183.0
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.LogNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "输出日志等级",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "FlatNode.Runtime.LogNode+LogType",
+                    "nodeVariableValue": "Log"
+                },
+                {
+                    "portName": "输出日志内容",
+                    "targetPortName": "输出",
+                    "targetNodeId": 7,
+                    "nodeVariableGenericTypeName": "",
+                    "nodeVariableValue": ""
+                }
+            ],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "结束",
+                    "targetNodeList": []
+                }
+            ]
+        },
+        {
+            "nodeId": 1,
+            "positionInGraph": {
+                "x": 94.0,
+                "y": 30.0
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.RepeatNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "重复次数",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "System.Int32",
+                    "nodeVariableValue": "3"
+                },
+                {
+                    "portName": "每次重复间隔",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "System.Single",
+                    "nodeVariableValue": "0.5"
+                },
+                {
+                    "portName": "是否立即执行第一次",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "System.Boolean",
+                    "nodeVariableValue": "False"
+                }
+            ],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "每一次执行时",
+                    "targetNodeList": [
+                        2
+                    ]
+                },
+                {
+                    "flowOutPortName": "重复执行完成时",
+                    "targetNodeList": [
+                        5
+                    ]
+                }
+            ]
+        },
+        {
+            "nodeId": 0,
+            "positionInGraph": {
+                "x": -451.0000305175781,
+                "y": -8.0
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.OnClickNode",
+            "inputPortInfoList": [],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "点击技能时",
+                    "targetNodeList": [
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "nodeId": 2,
+            "positionInGraph": {
+                "x": 669.4138793945313,
+                "y": -73.48274230957031
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.CreateSequenceNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "初始化数量",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "System.Int32",
+                    "nodeVariableValue": "0"
+                }
+            ],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "创建序列",
+                    "targetNodeList": [
+                        3
+                    ]
+                }
+            ]
+        },
+        {
+            "nodeId": 4,
+            "positionInGraph": {
+                "x": 1668.034423828125,
+                "y": -88.89655303955078
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.LogNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "输出日志等级",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "FlatNode.Runtime.LogNode+LogType",
+                    "nodeVariableValue": "Log"
+                },
+                {
+                    "portName": "输出日志内容",
+                    "targetPortName": "输出",
+                    "targetNodeId": 6,
+                    "nodeVariableGenericTypeName": "",
+                    "nodeVariableValue": ""
+                }
+            ],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "结束",
+                    "targetNodeList": []
+                }
+            ]
+        },
+        {
+            "nodeId": 3,
+            "positionInGraph": {
+                "x": 1154.758056640625,
+                "y": -88.58618927001953
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.WaitNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "等待时长",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "System.Single",
+                    "nodeVariableValue": "2"
+                }
+            ],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "等待结束时",
+                    "targetNodeList": [
+                        4
+                    ]
+                }
+            ]
+        },
+        {
+            "nodeId": 6,
+            "positionInGraph": {
+                "x": 1443.7523193359375,
+                "y": 14.12944221496582
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.GetVariableNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "读变量",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "FlatNode.Runtime.VariableWrapper",
+                    "nodeVariableValue": "0"
+                }
+            ],
+            "flowOutPortInfoList": []
+        },
+        {
+            "nodeId": 7,
+            "positionInGraph": {
+                "x": 501.7656555175781,
+                "y": 275.2837829589844
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.GetVariableNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "读变量",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "FlatNode.Runtime.VariableWrapper",
+                    "nodeVariableValue": "1"
+                }
+            ],
+            "flowOutPortInfoList": []
+        }
+    ],
+    "commentBoxInfoList": [
+        {
+            "positionInGraph": {
+                "x": -249.020751953125,
+                "y": -222.9425811767578
+            },
+            "size": {
+                "x": 625.0,
+                "y": 405.76922607421877
+            },
+            "comment": "重复执行3次"
+        },
+        {
+            "positionInGraph": {
+                "x": 483.2736511230469,
+                "y": -306.62957763671877
+            },
+            "size": {
+                "x": 1355.17236328125,
+                "y": 375.862060546875
+            },
+            "comment": "创建Sequence执行，这样后面的节点会创建多个副本实例到Sequence中"
+        }
+    ],
+    "graphVariableInfoList": [
+        {
+            "id": 0,
+            "name": "每次重复等待后输出内容",
+            "valueString": "Repeat Once!",
+            "typeName": "System.String"
+        },
+        {
+            "id": 1,
+            "name": "重复完成后输出内容",
+            "valueString": "Repeat Finish!",
+            "typeName": "System.String"
+        }
+    ]
+}

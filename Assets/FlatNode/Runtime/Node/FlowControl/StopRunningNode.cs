@@ -13,7 +13,7 @@ namespace FlatNode.Runtime
             base.OnEnter();
 
             List<int> nodeIdList = GetInputValue(stopNodeIdsInput);
-            skillSequence.GraphBehaviourBase.StopNodes(nodeIdList);
+            nodeSequence.GraphBehaviour.StopNodes(nodeIdList);
             
             EventTiming(0);
             Finish();

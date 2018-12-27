@@ -257,12 +257,12 @@ namespace FlatNode.Runtime
         /// </summary>
         /// <param name="graphInfo"></param>
         /// <returns></returns>
-        public static Dictionary<int, NodeVariable> DeserializeSkillVariableInfo(GraphInfo graphInfo)
+        public static Dictionary<int, NodeVariable> DeserializeGraphVariableInfo(GraphInfo graphInfo)
         {
             Dictionary<int, NodeVariable> resultDictionary = new Dictionary<int, NodeVariable>();
 
-            int skillVariableCount = graphInfo.GraphVariableInfosLength;
-            for (int i = 0; i < skillVariableCount; i++)
+            int graphVariableCount = graphInfo.GraphVariableInfosLength;
+            for (int i = 0; i < graphVariableCount; i++)
             {
                 GraphVariableInfo graphVariableInfo = graphInfo.GraphVariableInfos(i).Value;
                 int id = graphVariableInfo.Id;

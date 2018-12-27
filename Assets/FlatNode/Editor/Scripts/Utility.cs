@@ -75,7 +75,7 @@ namespace FlatNode.Editor
         {
             if (lineTexture == null)
             {
-                lineTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/Editor/SkillEditor/Skin/Line");
+                lineTexture = AssetDatabase.LoadAssetAtPath<Texture2D>("Assets/FlatNode/Editor/Skin/Line");
             }
 
             return lineTexture;

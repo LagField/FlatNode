@@ -813,19 +813,26 @@ namespace FlatNode.Editor
             if (string.IsNullOrEmpty(data.graphName) && data.nodeList.Count > 0)
             {
                 genericMenu.AddSeparator("");
-                genericMenu.AddItem(new GUIContent("保存为新技能"), false, OpenSaveSkillWindow, mousePosition);
+                genericMenu.AddItem(new GUIContent("保存为新行为图"), false, OpenSaveGraphWindow, mousePosition);
             }
             else if (!string.IsNullOrEmpty(data.graphName) && data.nodeList.Count > 0)
             {
                 genericMenu.AddSeparator("");
-                genericMenu.AddItem(new GUIContent("保存当前技能"), false, SaveCurrentSkill, mousePosition);
+                genericMenu.AddItem(new GUIContent("保存当前行为图"), false, SaveCurrentGraph, mousePosition);
+            }
+
+            //新建行为图，重置所有数据
+            if (!string.IsNullOrEmpty(data.graphName))
+            {
+                genericMenu.AddSeparator("");
+                genericMenu.AddItem(new GUIContent("新建行为图"),false, Reset );
             }
 
             genericMenu.AddSeparator("");
-            genericMenu.AddItem(new GUIContent("载入技能"), false, OpenGraphLoadWindow, mousePosition);
+            genericMenu.AddItem(new GUIContent("载入行为图"), false, OpenGraphLoadWindow, mousePosition);
 
             genericMenu.AddSeparator("");
-            genericMenu.AddItem(new GUIContent("删除技能"), false, OpenDeleteGraphWindow, mousePosition);
+            genericMenu.AddItem(new GUIContent("删除行为图"), false, OpenDeleteGraphWindow, mousePosition);
 
             genericMenu.ShowAsContext();
         }
@@ -861,7 +868,7 @@ namespace FlatNode.Editor
             }
         }
 
-        void SaveCurrentSkill(object mousePositionObject)
+        void SaveCurrentGraph(object mousePositionObject)
         {
             if (data.CheckHasEntranceNode())
             {
@@ -873,7 +880,7 @@ namespace FlatNode.Editor
             }
         }
 
-        void OpenSaveSkillWindow(object mousePositionObject)
+        void OpenSaveGraphWindow(object mousePositionObject)
         {
             Vector2 mousePosition = (Vector2) mousePositionObject;
 
@@ -885,12 +892,12 @@ namespace FlatNode.Editor
 
             try
             {
-                int newSkillId = PersistenceTool.GetNewGraphId();
+                int newGraphId = PersistenceTool.GetNewGraphId();
                 PopupWindow.Show(new Rect(mousePosition + position.position, new Vector2(500, 0)), new SaveGraphPopupWindow(
-                    newSkillId, (id, skillName, description) =>
+                    newGraphId, (id, graphName, description) =>
                     {
                         data.graphId = id;
-                        data.graphName = skillName;
+                        data.graphName = graphName;
                         data.graphDescription = description;
                         PersistenceTool.SaveGraph(data);
                     }));
@@ -929,7 +936,7 @@ namespace FlatNode.Editor
             try
             {
                 PopupWindow.Show(new Rect(mousePosition + position.position, new Vector2(500, 0)),
-                    new DeleteGraphPopupWindow(PersistenceTool.DeleteSkillFiles));
+                    new DeleteGraphPopupWindow(PersistenceTool.DeleteGraphFiles));
             }
             catch
             {

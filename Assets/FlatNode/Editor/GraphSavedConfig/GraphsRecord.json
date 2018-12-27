@@ -1,0 +1,15 @@
+{
+    "nextGraphId": 2,
+    "graphBaseInfoList": [
+        {
+            "graphId": 0,
+            "graphName": "基础演示",
+            "graphDescription": "演示基础行为图编辑及运行"
+        },
+        {
+            "graphId": 1,
+            "graphName": "测试CreateSequence",
+            "graphDescription": "测试CreateSequence"
+        }
+    ]
+}

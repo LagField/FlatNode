@@ -1,0 +1,196 @@
+{
+    "graphId": 0,
+    "graphName": "基础演示",
+    "graphDescription": "演示基础行为图编辑及运行",
+    "nodesList": [
+        {
+            "nodeId": 0,
+            "positionInGraph": {
+                "x": -627.3125,
+                "y": 21.125
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.OnClickNode",
+            "inputPortInfoList": [],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "点击技能时",
+                    "targetNodeList": [
+                        1
+                    ]
+                }
+            ]
+        },
+        {
+            "nodeId": 5,
+            "positionInGraph": {
+                "x": 1002.4022827148438,
+                "y": 215.2041473388672
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.LogNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "输出日志等级",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "FlatNode.Runtime.LogNode+LogType",
+                    "nodeVariableValue": "Log"
+                },
+                {
+                    "portName": "输出日志内容",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "System.String",
+                    "nodeVariableValue": "press return"
+                }
+            ],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "结束",
+                    "targetNodeList": []
+                }
+            ]
+        },
+        {
+            "nodeId": 1,
+            "positionInGraph": {
+                "x": -209.5,
+                "y": -9.1875
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.UpdateNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "间隔时间",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "System.Single",
+                    "nodeVariableValue": "-1"
+                }
+            ],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "每一次update",
+                    "targetNodeList": [
+                        2,
+                        4
+                    ]
+                }
+            ]
+        },
+        {
+            "nodeId": 3,
+            "positionInGraph": {
+                "x": 1033.640380859375,
+                "y": -163.85670471191407
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.LogNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "输出日志等级",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "FlatNode.Runtime.LogNode+LogType",
+                    "nodeVariableValue": "Log"
+                },
+                {
+                    "portName": "输出日志内容",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "System.String",
+                    "nodeVariableValue": "press space"
+                }
+            ],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "结束",
+                    "targetNodeList": []
+                }
+            ]
+        },
+        {
+            "nodeId": 4,
+            "positionInGraph": {
+                "x": 481.6710510253906,
+                "y": 144.47242736816407
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.CheckKeyPressNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "要检测的按键",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "UnityEngine.KeyCode",
+                    "nodeVariableValue": "Return"
+                }
+            ],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "检测到按键按下时",
+                    "targetNodeList": [
+                        5
+                    ]
+                }
+            ]
+        },
+        {
+            "nodeId": 2,
+            "positionInGraph": {
+                "x": 519.6776123046875,
+                "y": -192.07545471191407
+            },
+            "nodeClassTypeName": "FlatNode.Runtime.CheckKeyPressNode",
+            "inputPortInfoList": [
+                {
+                    "portName": "要检测的按键",
+                    "targetPortName": "",
+                    "targetNodeId": -1,
+                    "nodeVariableGenericTypeName": "UnityEngine.KeyCode",
+                    "nodeVariableValue": "Space"
+                }
+            ],
+            "flowOutPortInfoList": [
+                {
+                    "flowOutPortName": "检测到按键按下时",
+                    "targetNodeList": [
+                        3
+                    ]
+                }
+            ]
+        }
+    ],
+    "commentBoxInfoList": [
+        {
+            "positionInGraph": {
+                "x": -543.1121215820313,
+                "y": -188.818603515625
+            },
+            "size": {
+                "x": 589.0625610351563,
+                "y": 326.5625
+            },
+            "comment": "每一帧检测"
+        },
+        {
+            "positionInGraph": {
+                "x": 247.51292419433595,
+                "y": -418.506103515625
+            },
+            "size": {
+                "x": 1001.5625,
+                "y": 376.5625
+            },
+            "comment": "按下空格时"
+        },
+        {
+            "positionInGraph": {
+                "x": 245.54281616210938,
+                "y": -18.805023193359376
+            },
+            "size": {
+                "x": 1077.5,
+                "y": 380.0000305175781
+            },
+            "comment": "按下回车时"
+        }
+    ],
+    "graphVariableInfoList": []
+}

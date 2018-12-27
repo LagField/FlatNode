@@ -92,11 +92,11 @@ namespace FlatNode.Editor
 
             if (graphVariableInfo != null)
             {
-                NodeView.UpdateSkillVariableNodeIOPortType(graphVariableInfo.valueType, true);
+                NodeView.UpdateGraphVariableNodeIOPortType(graphVariableInfo.valueType, true);
             }
             else
             {
-                NodeView.UpdateSkillVariableNodeIOPortType(null, true);
+                NodeView.UpdateGraphVariableNodeIOPortType(null, true);
             }
         }
 
@@ -319,7 +319,7 @@ namespace FlatNode.Editor
                 CalculateAndDrawLabelCommonElement("变量: ", EditorStyles.label.CalcSize(new GUIContent(buttonName)).x + 20);
                 if (GUI.Button(labelInputAreaRect, buttonName))
                 {
-                    PopupWindow.Show(labelInputAreaRect, new SelectGraphVariablePopupWindow(data.CurrentSkillVariableInfoList,
+                    PopupWindow.Show(labelInputAreaRect, new SelectGraphVariablePopupWindow(data.CurrentGraphVariableInfoList,
                         selectVariableId =>
                         {
                             variableWrapper.variableId = selectVariableId;
@@ -327,7 +327,7 @@ namespace FlatNode.Editor
 
                             Type variableType = GraphEditorWindow.instance.data
                                 .GetGraphVariableInfo(selectVariableId).valueType;
-                            NodeView.UpdateSkillVariableNodeIOPortType(variableType, true);
+                            NodeView.UpdateGraphVariableNodeIOPortType(variableType, true);
                         }));
                 }
             }
@@ -360,7 +360,7 @@ namespace FlatNode.Editor
             if (variableWrapper == null)
             {
                 //这里不要直接检查连线合法性，所有读写技能变量的节点类型都改变后，统一检查一次连线合法性。下同
-                NodeView.UpdateSkillVariableNodeIOPortType(null, false);
+                NodeView.UpdateGraphVariableNodeIOPortType(null, false);
                 return;
             }
 
@@ -368,11 +368,11 @@ namespace FlatNode.Editor
                 GraphEditorWindow.instance.data.GetGraphVariableInfo(variableWrapper.variableId);
             if (graphVariableInfo == null)
             {
-                NodeView.UpdateSkillVariableNodeIOPortType(null, false);
+                NodeView.UpdateGraphVariableNodeIOPortType(null, false);
                 return;
             }
 
-            NodeView.UpdateSkillVariableNodeIOPortType(graphVariableInfo.valueType, false);
+            NodeView.UpdateGraphVariableNodeIOPortType(graphVariableInfo.valueType, false);
         }
 
         public bool IsInputLabelContains(Vector2 positionInWindow)

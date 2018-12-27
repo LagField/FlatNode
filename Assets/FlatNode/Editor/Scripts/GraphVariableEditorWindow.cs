@@ -96,13 +96,13 @@ namespace FlatNode.Editor
             //增加变量
             if (GUILayout.Button("增加变量", GUILayout.MinWidth(100), GUILayout.MinHeight(30)))
             {
-                if (data.CurrentSkillVariableInfoList == null)
+                if (data.CurrentGraphVariableInfoList == null)
                 {
                     return;
                 }
 
                 int newId = GetNewVariableId();
-                data.CurrentSkillVariableInfoList.Add(new GraphVariableInfo
+                data.CurrentGraphVariableInfoList.Add(new GraphVariableInfo
                 {
                     id = newId
                 });
@@ -113,19 +113,19 @@ namespace FlatNode.Editor
 
         private void DrawLocalVariableItemList()
         {
-            if (data.CurrentSkillVariableInfoList == null)
+            if (data.CurrentGraphVariableInfoList == null)
             {
                 return;
             }
 
             scrollPosition = GUILayout.BeginScrollView(scrollPosition);
-            for (int i = 0; i < data.CurrentSkillVariableInfoList.Count; i++)
+            for (int i = 0; i < data.CurrentGraphVariableInfoList.Count; i++)
             {
-                GraphVariableInfo variableInfo = data.CurrentSkillVariableInfoList[i];
+                GraphVariableInfo variableInfo = data.CurrentGraphVariableInfoList[i];
 
                 if (DrawLocalVariableItem(variableInfo))
                 {
-                    data.CurrentSkillVariableInfoList.RemoveAt(i);
+                    data.CurrentGraphVariableInfoList.RemoveAt(i);
                     GraphEditorWindow.instance.data.OnGraphVariableListChange();
                     break;
                 }
@@ -312,12 +312,12 @@ namespace FlatNode.Editor
 
         /// <summary>
         /// 分配一个新的id
-        /// todo 也许可以放到SkillEditorData里面去
+        /// todo 也许可以放到 <see cref="GraphEditorData"/> 里面去
         /// </summary>
         /// <returns></returns>
         private int GetNewVariableId()
         {
-            if (data.CurrentSkillVariableInfoList == null)
+            if (data.CurrentGraphVariableInfoList == null)
             {
                 return 0;
             }
@@ -325,9 +325,9 @@ namespace FlatNode.Editor
             for (int i = 0; i < int.MaxValue; i++)
             {
                 bool hasAssigned = false;
-                for (int j = 0; j < data.CurrentSkillVariableInfoList.Count; j++)
+                for (int j = 0; j < data.CurrentGraphVariableInfoList.Count; j++)
                 {
-                    int assignedId = data.CurrentSkillVariableInfoList[j].id;
+                    int assignedId = data.CurrentGraphVariableInfoList[j].id;
 
                     if (i == assignedId)
                     {

@@ -34,11 +34,11 @@ namespace FlatNode.Editor
                 return;
             }
 
-            //SkillNodeAttribute
+            //GraphNodeAttribute
             object[] attributeObjects = type.GetCustomAttributes(typeof(GraphNodeAttribute), false);
             if (attributeObjects.Length == 0)
             {
-                Debug.LogErrorFormat("class {0} 不包含SkillNodeAttribute", type.Name);
+                Debug.LogErrorFormat("class {0} 不包含GraphNodeAttribute", type.Name);
                 return;
             }
 

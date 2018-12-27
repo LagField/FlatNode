@@ -107,7 +107,7 @@ namespace FlatNode.Editor
         private Action<Type> onSelectionNode;
 
         private MenuItem rootMenuItem;
-        private static List<Type> skillNodeTypeList;
+        private static List<Type> graphNodeTypeList;
 
         /// <summary>
         /// 当前菜单显示的列表是currentParentMenuItem的ChildrenItem列表
@@ -136,9 +136,9 @@ namespace FlatNode.Editor
             filteredMenuItemList = new List<MenuItem>();
             allEndMenuItemList = new List<MenuItem>();
 
-            if (skillNodeTypeList == null)
+            if (graphNodeTypeList == null)
             {
-                skillNodeTypeList = Utility.GetNodeTypeList();
+                graphNodeTypeList = Utility.GetNodeTypeList();
             }
 
             ConstructMenuItems();
@@ -463,9 +463,9 @@ namespace FlatNode.Editor
                 Path = new string[0],
             };
 
-            for (int i = 0; i < skillNodeTypeList.Count; i++)
+            for (int i = 0; i < graphNodeTypeList.Count; i++)
             {
-                Type nodeType = skillNodeTypeList[i];
+                Type nodeType = graphNodeTypeList[i];
                 object[] attributeObjects = nodeType.GetCustomAttributes(typeof(GraphNodeAttribute),false);
                 if (attributeObjects.Length == 0)
                 {

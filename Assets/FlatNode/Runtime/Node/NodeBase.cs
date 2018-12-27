@@ -9,8 +9,8 @@ namespace FlatNode.Runtime
         public int[][] flowOutTargetNodeId;
         public Func<NodeVariable>[] outputPortFuncs;
 
-        protected GraphBehaviourBase graphBehaviourBase;
-        protected SkillSequence skillSequence;
+        protected GraphBehaviour graphBehaviour;
+        protected NodeSequence nodeSequence;
 
         /// <summary>
         /// 看该节点是否是<see cref="CreateSequenceNode"/>类型，避免运行时频繁类型检查
@@ -28,7 +28,7 @@ namespace FlatNode.Runtime
         public bool isFinish;
 
         /// <summary>
-        /// 该节点是否update过，true时表示该节点在SkillSequence的runningNodeList里面
+        /// 该节点是否update过，true时表示该节点在NodeSequence的runningNodeList里面
         /// </summary>
         public bool isUpdated;
 
@@ -50,7 +50,7 @@ namespace FlatNode.Runtime
         protected void Finish()
         {
             isFinish = true;
-            skillSequence.NodeExecuteFinish(this);
+            nodeSequence.NodeExecuteFinish(this);
         }
 
         public virtual void OnReset()
@@ -63,14 +63,14 @@ namespace FlatNode.Runtime
 
         }
 
-        public void SetSkillSequence(SkillSequence skillSequence)
+        public void SetNodeSequence(NodeSequence nodeSequence)
         {
-            this.skillSequence = skillSequence;
+            this.nodeSequence = nodeSequence;
         }
 
-        public void SetSkill(GraphBehaviourBase graphBehaviourBase)
+        public void SetGraphBehaviour(GraphBehaviour graphBehaviour)
         {
-            this.graphBehaviourBase = graphBehaviourBase;
+            this.graphBehaviour = graphBehaviour;
         }
 
         public NodeVariable GetOutputPortValue(int portIndex)
@@ -98,7 +98,7 @@ namespace FlatNode.Runtime
             {
                 for (int i = 0; i < targetNodeIds.Length; i++)
                 {
-                    skillSequence.FlowToNode(targetNodeIds[i]);
+                    nodeSequence.FlowToNode(targetNodeIds[i]);
                 }
             }
         }
@@ -116,14 +116,14 @@ namespace FlatNode.Runtime
             }
 
             NodeBase targetNode = null;
-            //skillSequence为null 说明是公共节点
-            if (skillSequence == null)
+            //NodeSequence为null 说明是公共节点
+            if (nodeSequence == null)
             {
-                targetNode = graphBehaviourBase.GetCommonNode(inputVariable.targetNodeId);
+                targetNode = graphBehaviour.GetCommonNode(inputVariable.targetNodeId);
             }
             else
             {
-                targetNode = skillSequence.GetNodeAlongThisAndParentSequeces(inputVariable.targetNodeId);
+                targetNode = nodeSequence.GetNodeAlongThisAndParentSequeces(inputVariable.targetNodeId);
             }
 
             if (targetNode == null)
@@ -160,14 +160,14 @@ namespace FlatNode.Runtime
             }
             
             NodeBase targetNode = null;
-            //skillSequence为null 说明是公共节点
-            if (skillSequence == null)
+            //NodeSequence为null 说明是公共节点
+            if (nodeSequence == null)
             {
-                targetNode = graphBehaviourBase.GetCommonNode(inputVariable.targetNodeId);
+                targetNode = graphBehaviour.GetCommonNode(inputVariable.targetNodeId);
             }
             else
             {
-                targetNode = skillSequence.GetNodeAlongThisAndParentSequeces(inputVariable.targetNodeId);
+                targetNode = nodeSequence.GetNodeAlongThisAndParentSequeces(inputVariable.targetNodeId);
             }
             
             if (targetNode == null)

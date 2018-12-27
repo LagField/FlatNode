@@ -26,6 +26,7 @@ namespace FlatNode.Runtime
                 {"FlatNode.Runtime.StopRunningNode",()=> new StopRunningNode()},
                 {"FlatNode.Runtime.UpdateNode",()=> new UpdateNode()},
                 {"FlatNode.Runtime.WaitNode",()=> new WaitNode()},
+                {"FlatNode.Runtime.CheckKeyPressNode",()=> new CheckKeyPressNode()},
                 {"FlatNode.Runtime.IntComparerNode",()=> new IntComparerNode()},
                 {"FlatNode.Runtime.InverseDirectionNode",()=> new InverseDirectionNode()},
                 {"FlatNode.Runtime.JoyStickInputConvertNode",()=> new JoyStickInputConvertNode()},
@@ -262,6 +263,31 @@ namespace FlatNode.Runtime
                             {
                                 waitNode.waitTimeInputVariable = new NodeInputVariable<float>();
                                 waitNode.waitTimeInputVariable.value = float.Parse(valueString);
+                            }
+                        }
+                    }
+                },
+                {
+                    typeof(CheckKeyPressNode),(nodeInstance, inputFieldInfo) =>
+                    {
+                        CheckKeyPressNode checkKeyPressNode = nodeInstance as CheckKeyPressNode;
+                        string inputPortFieldName = inputFieldInfo.FieldName;
+                        int targetNodeId = inputFieldInfo.TargetNodeId;
+                        int targetPortId = inputFieldInfo.TargetPortId;
+                        string valueString = inputFieldInfo.ValueString;
+                        
+                        if (inputPortFieldName == "checkKeyCodeInput")
+                        {
+                            if (targetNodeId >= 0 && targetPortId >= 0)
+                            {
+                                checkKeyPressNode.checkKeyCodeInput = new NodeInputVariable<UnityEngine.KeyCode>();
+                                checkKeyPressNode.checkKeyCodeInput.targetNodeId = targetNodeId;
+                                checkKeyPressNode.checkKeyCodeInput.targetPortId = targetPortId;
+                            }
+                            else
+                            {
+                                checkKeyPressNode.checkKeyCodeInput = new NodeInputVariable<UnityEngine.KeyCode>();
+                                checkKeyPressNode.checkKeyCodeInput.value = (UnityEngine.KeyCode)Enum.Parse(typeof(UnityEngine.KeyCode), valueString);
                             }
                         }
                     }

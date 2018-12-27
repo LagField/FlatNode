@@ -5,7 +5,7 @@ namespace FlatNode.Editor
 {
     public class SaveGraphPopupWindow : PopupWindowContent
     {
-        public delegate void OnConfirmSave(int id,string skillName,string skillDescription);
+        public delegate void OnConfirmSave(int id,string graphName,string graphDescription);
         private OnConfirmSave saveCallback;
 
         private int graphId;

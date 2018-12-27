@@ -54,7 +54,7 @@ namespace FlatNode.Editor
 
         public List<CommentBoxView> commentBoxViewList;
 
-        public List<GraphVariableInfo> CurrentSkillVariableInfoList
+        public List<GraphVariableInfo> CurrentGraphVariableInfoList
         {
             get { return graphVariableInfoList; }
         }

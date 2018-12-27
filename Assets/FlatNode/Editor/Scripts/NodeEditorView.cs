@@ -189,7 +189,7 @@ namespace FlatNode.Editor
                 GUI.Box(viewRect, "", Utility.GetGuiStyle("EntranceNode"));
             }
 
-            if (ReflectionInfo.Type.IsSubclassOf(typeof(SkillVariableNodeBase)))
+            if (ReflectionInfo.Type.IsSubclassOf(typeof(GraphVariableNodeBase)))
             {
                 GUI.Box(viewRect, "", Utility.GetGuiStyle("NodeCyan"));
             }
@@ -418,7 +418,7 @@ namespace FlatNode.Editor
         /// </summary>
         /// <param name="variableType"></param>
         /// <param name="needRecheckConnection"></param>
-        public void UpdateSkillVariableNodeIOPortType(Type variableType,bool needRecheckConnection)
+        public void UpdateGraphVariableNodeIOPortType(Type variableType,bool needRecheckConnection)
         {
             if (ReflectionInfo.Type == typeof(GetVariableNode))
             {

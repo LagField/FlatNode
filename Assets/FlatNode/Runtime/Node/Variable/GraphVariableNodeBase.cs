@@ -3,7 +3,7 @@ namespace FlatNode.Runtime
     /// <summary>
     /// 通过该节点子类，可以预先输入一些变量，或者在运行时将临时变量放到技能中。
     /// </summary>
-    public abstract class SkillVariableNodeBase : NodeBase
+    public abstract class GraphVariableNodeBase : NodeBase
     {
         
     }
@@ -33,7 +33,7 @@ namespace FlatNode.Runtime
     /// 从技能中获取临时变量
     /// </summary>
     [GraphNode("获取变量","Variable/GetVariable","获取技能的临时变量",hasFlowIn = false)]
-    public class GetVariableNode : SkillVariableNodeBase
+    public class GetVariableNode : GraphVariableNodeBase
     {
         [NodeInputPort(0,"读变量")]
         public NodeInputVariable<VariableWrapper> getVariableWrapperInput;
@@ -42,7 +42,7 @@ namespace FlatNode.Runtime
         public NodeVariable GetValue()
         {
             int variableId = GetInputValue(getVariableWrapperInput).variableId;
-            return graphBehaviourBase.GetGraphVariable(variableId);
+            return graphBehaviour.GetGraphVariable(variableId);
         }
     }
 
@@ -51,7 +51,7 @@ namespace FlatNode.Runtime
     /// </summary>
     [GraphNode("写入变量","Variable/SetVariable","将内容写入临时变量")]
     [NodeFlowOutPortDefine(0,"完成")]
-    public class SetVariableNode : SkillVariableNodeBase
+    public class SetVariableNode : GraphVariableNodeBase
     {
         [NodeInputPort(0,"写变量")]
         public NodeInputVariable<VariableWrapper> setVariableWrapperInput;
@@ -66,7 +66,7 @@ namespace FlatNode.Runtime
             int variableId = GetInputValue(setVariableWrapperInput).variableId;
             NodeVariable saveValue = GetInputValueRaw(valueVariableInput);
             
-            graphBehaviourBase.SetGraphVariable(variableId,saveValue);
+            graphBehaviour.SetGraphVariable(variableId,saveValue);
             
             EventTiming(0);
             Finish();

@@ -332,7 +332,7 @@ namespace FlatNode.Editor
 
             VectorOffset entranceNodeVectorOffset = fbb.EndVector();
 
-            //skill variable infos
+            //graph variable infos
             int graphVariableCount = graphVariableInfoList.Count;
             Offset<FlatNode.Runtime.Flat.GraphVariableInfo>[] graphVariableInfoOffsets =
                 new Offset<FlatNode.Runtime.Flat.GraphVariableInfo>[graphVariableCount];
@@ -803,7 +803,7 @@ namespace FlatNode.Editor
 
         #region 删除
 
-        public static void DeleteSkillFiles(int graphId)
+        public static void DeleteGraphFiles(int graphId)
         {
             //删掉editor配置文件
             string graphEditorConfigFilePath = Path.Combine(Application.dataPath,
