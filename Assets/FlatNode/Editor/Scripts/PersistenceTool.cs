@@ -181,6 +181,11 @@ namespace FlatNode.Editor
 
                     string graphRuntimeConfigFilePath = Path.Combine(Application.dataPath,
                         string.Format("Resources/GraphRuntime/{0}.bytes", data.graphId));
+                    string parentDirctoryPath = Directory.GetParent(graphRuntimeConfigFilePath).FullName;
+                    if (!Directory.Exists(parentDirctoryPath))
+                    {
+                        Directory.CreateDirectory(parentDirctoryPath);
+                    }
                     if (runtimeConfigBytes != null)
                     {
                         File.WriteAllBytes(graphRuntimeConfigFilePath, runtimeConfigBytes);
@@ -463,19 +468,19 @@ namespace FlatNode.Editor
 
         #region 载入
 
-        public static GraphEditorData LoadGraph(GraphEditorWindow graph, int skillId)
+        public static GraphEditorData LoadGraph(GraphEditorWindow graph, int graphId)
         {
             GraphEditorData resultData = new GraphEditorData();
 
-            string skillConfigFilePath = Path.Combine(Application.dataPath,
-                string.Format("Editor/SkillEditor/SkillSavedConfig/{0}.json", skillId));
+            string graphEditorConfigFilePath = Path.Combine(Application.dataPath,
+                string.Format("FlatNode/Editor/GraphSavedConfig/{0}.json", graphId));
 
-            if (!File.Exists(skillConfigFilePath))
+            if (!File.Exists(graphEditorConfigFilePath))
             {
-                Debug.LogErrorFormat("无法载入技能配置文件： {0}", skillConfigFilePath);
+                Debug.LogErrorFormat("无法载入行为图配置文件： {0}", graphEditorConfigFilePath);
             }
 
-            string jsonString = File.ReadAllText(skillConfigFilePath);
+            string jsonString = File.ReadAllText(graphEditorConfigFilePath);
             GraphConfigInfo graphConfigInfo = new GraphConfigInfo();
             EditorJsonUtility.FromJsonOverwrite(jsonString, graphConfigInfo);
 
@@ -511,7 +516,6 @@ namespace FlatNode.Editor
                     continue;
                 }
 
-                resultData.nodeList.Add(nodeView);
                 resultData.nodeList.Add(nodeView);
             }
 
@@ -799,23 +803,25 @@ namespace FlatNode.Editor
 
         #region 删除
 
-        public static void DeleteSkillFiles(int skillId)
+        public static void DeleteSkillFiles(int graphId)
         {
-            string skillConfigFilePath = Path.Combine(Application.dataPath,
-                string.Format("Editor/SkillEditor/SkillSavedConfig/{0}.json", skillId));
-            string skillRuntimeFilePath =
-                Path.Combine(Application.dataPath, string.Format("Resources/SkillRuntime/{0}.bytes", skillId));
+            //删掉editor配置文件
+            string graphEditorConfigFilePath = Path.Combine(Application.dataPath,
+                string.Format("FlatNode/Editor/GraphSavedConfig/{0}.json", graphId));
+            //删掉运行时配置文件
+            string graphRuntimeConfigFilePath =
+                Path.Combine(Application.dataPath, string.Format("Resources/GraphRuntime/{0}.bytes", graphId));
 
-            RemoveGraphInfoInRecord(skillId);
+            RemoveGraphInfoInRecord(graphId);
 
-            if (File.Exists(skillConfigFilePath))
+            if (File.Exists(graphEditorConfigFilePath))
             {
-                File.Delete(skillConfigFilePath);
+                File.Delete(graphEditorConfigFilePath);
             }
 
-            if (File.Exists(skillRuntimeFilePath))
+            if (File.Exists(graphRuntimeConfigFilePath))
             {
-                File.Delete(skillRuntimeFilePath);
+                File.Delete(graphRuntimeConfigFilePath);
             }
         }
 

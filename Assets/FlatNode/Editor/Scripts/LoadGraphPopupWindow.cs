@@ -23,7 +23,7 @@ namespace FlatNode.Editor
             GUILayout.Space(10);
 
             List<GraphBaseInfo> graphBaseInfoList = PersistenceTool.LoadGraphBaseInfoList();
-            if (graphBaseInfoList == null)
+            if (graphBaseInfoList == null || graphBaseInfoList.Count == 0)
             {
                 GUILayout.Label("没有图可以载入", Utility.GetGuiStyle("LoadSkillHint"));
                 return;

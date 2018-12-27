@@ -822,10 +822,10 @@ namespace FlatNode.Editor
             }
 
             genericMenu.AddSeparator("");
-            genericMenu.AddItem(new GUIContent("载入技能"), false, OpenSkillLoadWindow, mousePosition);
+            genericMenu.AddItem(new GUIContent("载入技能"), false, OpenGraphLoadWindow, mousePosition);
 
             genericMenu.AddSeparator("");
-            genericMenu.AddItem(new GUIContent("删除技能"), false, OpenDeleteSkillWindow, mousePosition);
+            genericMenu.AddItem(new GUIContent("删除技能"), false, OpenDeleteGraphWindow, mousePosition);
 
             genericMenu.ShowAsContext();
         }
@@ -853,7 +853,6 @@ namespace FlatNode.Editor
                     NodeReflectionInfo reflectionInfo = new NodeReflectionInfo(type);
                     NodeEditorView nodeEditorView = new NodeEditorView(WindowPositionToGraphPosition(mousePosition), this, newId,
                         reflectionInfo);
-                    data.nodeList.Add(nodeEditorView);
                     data.CurrentNodeList.Add(nodeEditorView);
                 }));
             }
@@ -901,16 +900,16 @@ namespace FlatNode.Editor
             }
         }
 
-        void OpenSkillLoadWindow(object mousePositionObject)
+        void OpenGraphLoadWindow(object mousePositionObject)
         {
             Vector2 mousePosition = (Vector2) mousePositionObject;
             try
             {
                 PopupWindow.Show(new Rect(mousePosition + position.position, new Vector2(500, 0)), new LoadGraphPopupWindow(
-                    loadSkillId =>
+                    loadGraphId =>
                     {
                         Reset();
-                        data = PersistenceTool.LoadGraph(this, loadSkillId);
+                        data = PersistenceTool.LoadGraph(this, loadGraphId);
 
                         //做一些载入完成的初始化工作
                         data.OnLoadFinish();
@@ -924,13 +923,13 @@ namespace FlatNode.Editor
             }
         }
 
-        void OpenDeleteSkillWindow(object mousePositionObject)
+        void OpenDeleteGraphWindow(object mousePositionObject)
         {
             Vector2 mousePosition = (Vector2) mousePositionObject;
             try
             {
                 PopupWindow.Show(new Rect(mousePosition + position.position, new Vector2(500, 0)),
-                    new DeleteSkillPopupWindow(PersistenceTool.DeleteSkillFiles));
+                    new DeleteGraphPopupWindow(PersistenceTool.DeleteSkillFiles));
             }
             catch
             {
