@@ -11,7 +11,7 @@ namespace FlatNode.Editor
         public Type Type { get; private set; }
         private object instance;
 
-        public SkillNodeAttribute NodeAttribute { get; private set; }
+        public GraphNodeAttribute NodeAttribute { get; private set; }
 
         private FieldInfo nodeIdFieldInfo;
         
@@ -35,14 +35,14 @@ namespace FlatNode.Editor
             }
 
             //SkillNodeAttribute
-            object[] attributeObjects = type.GetCustomAttributes(typeof(SkillNodeAttribute), false);
+            object[] attributeObjects = type.GetCustomAttributes(typeof(GraphNodeAttribute), false);
             if (attributeObjects.Length == 0)
             {
                 Debug.LogErrorFormat("class {0} 不包含SkillNodeAttribute", type.Name);
                 return;
             }
 
-            NodeAttribute = attributeObjects[0] as SkillNodeAttribute;
+            NodeAttribute = attributeObjects[0] as GraphNodeAttribute;
 
             nodeIdFieldInfo = type.GetField("nodeId", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 

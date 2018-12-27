@@ -466,7 +466,7 @@ namespace FlatNode.Editor
         {
             for (int i = 0; i < inputPortViewList.Count; i++)
             {
-                inputPortViewList[i].OnSkillVariableListChange();
+                inputPortViewList[i].OnGraphVariableListChange();
             }
         }
     }

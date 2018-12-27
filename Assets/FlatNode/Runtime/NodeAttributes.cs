@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace FlatNode.Runtime
 {
     [AttributeUsage(AttributeTargets.Class)]
-    public class SkillNodeAttribute : Attribute
+    public class GraphNodeAttribute : Attribute
     {
         public string nodeName;
         public string nodeMenuPath;
@@ -19,7 +18,7 @@ namespace FlatNode.Runtime
         /// </summary>
         public bool isEntranceNode;
 
-        public SkillNodeAttribute(string nodeName, string nodeMenuPath, string nodeDescription = "", bool hasFlowIn = true,bool isEntranceNode = false)
+        public GraphNodeAttribute(string nodeName, string nodeMenuPath, string nodeDescription = "", bool hasFlowIn = true,bool isEntranceNode = false)
         {
             this.nodeName = nodeName;
             this.nodeMenuPath = nodeMenuPath;

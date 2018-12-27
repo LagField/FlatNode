@@ -14,28 +14,47 @@ namespace FlatNode.Editor
     /// </summary>
     public class GraphCodeGenerator
     {
-        [MenuItem("FlatNode/生成节点静态代码")]
-        public static void GenerateSkillNodeCode()
+        [MenuItem("FlatNode/生成节点静态代码", priority = 2)]
+        public static void GenerateGraphNodeCode()
         {
             List<Type> nodeTypeList = Utility.GetNodeTypeList();
             GraphCodeGenerator graphCodeGenerator = new GraphCodeGenerator(nodeTypeList);
 
             graphCodeGenerator.Generate();
 
-            EditorUtility.DisplayDialog("完成", "静态代码生成完成。\n " + graphCodeGenerator.outputFilePath, "确定");
+            EditorUtility.DisplayDialog("完成", "静态代码生成完成。\n " + OutputFilePath, "确定");
             AssetDatabase.Refresh();
         }
+
+        [MenuItem("FlatNode/清除生成的静态代码", priority = 3)]
+        public static void ClearGraphNodeCode()
+        {
+            if (File.Exists(OutputFilePath))
+            {
+                GraphCodeGenerator graphCodeGenerator = new GraphCodeGenerator();
+                graphCodeGenerator.GenerateBaseCode();
+
+                EditorUtility.DisplayDialog("完成", "清除静态代码完成", "确定");
+                AssetDatabase.Refresh();
+            }
+        }
+
 
         private List<Type> nodeTypeList;
 
         /// <summary>
         /// 输出文件路径
         /// </summary>
-        private readonly string outputFilePath =
+        private static readonly string OutputFilePath =
             Application.dataPath + "/FlatNode/Runtime/GenerateCode/NodeGenerateCode.cs";
 
         private StringBuilder sb;
         private int indent;
+
+        public GraphCodeGenerator()
+        {
+            sb = new StringBuilder(1024);
+        }
 
         public GraphCodeGenerator(List<Type> nodeTypeList)
         {
@@ -46,14 +65,31 @@ namespace FlatNode.Editor
         private void Generate()
         {
             WriteNameSpace();
-            GenerateNodeFactoryDictionaryCode();
+            GenerateNodeFactoryDictionaryCode(true);
             WriteLine("");
-            GenerateNodeInputParseCode();
+            GenerateNodeInputParseCode(true);
             WriteLine("");
-            GenerateOutputFuncInitCode();
+            GenerateOutputFuncInitCode(true);
             WriteTail();
             FlushToFile();
         }
+
+        /// <summary>
+        /// 只生成最基础的代码结构，不生成任何和节点相关的静态代码
+        /// 如果修改了节点的一些代码（比如增删了一些借口方法等），生成的代码会报错，这时候需要先清除代码完成编译，再生成新的代码
+        /// </summary>
+        private void GenerateBaseCode()
+        {
+            WriteNameSpace();
+            GenerateNodeFactoryDictionaryCode(false);
+            WriteLine("");
+            GenerateNodeInputParseCode(false);
+            WriteLine("");
+            GenerateOutputFuncInitCode(false);
+            WriteTail();
+            FlushToFile();
+        }
+
 
         private void WriteNameSpace()
         {
@@ -83,7 +119,7 @@ namespace FlatNode.Editor
         /// <summary>
         /// 生成一个可以通过类型名称直接返回节点实例的字典
         /// </summary>
-        private void GenerateNodeFactoryDictionaryCode()
+        private void GenerateNodeFactoryDictionaryCode(bool generateNodeCode)
         {
             WriteLine("private static Dictionary<string, Func<NodeBase>> nodeFactoryDictionary;");
 
@@ -100,10 +136,13 @@ namespace FlatNode.Editor
             WriteLine("{");
             AddIndent(4);
 
-            for (int i = 0; i < nodeTypeList.Count; i++)
+            if (generateNodeCode)
             {
-                Type nodeType = nodeTypeList[i];
-                WriteLine(string.Format("{{\"{0}\",()=> new {1}()}},", nodeType.FullName, nodeType.Name));
+                for (int i = 0; i < nodeTypeList.Count; i++)
+                {
+                    Type nodeType = nodeTypeList[i];
+                    WriteLine(string.Format("{{\"{0}\",()=> new {1}()}},", nodeType.FullName, nodeType.Name));
+                }
             }
 
             AddIndent(-4);
@@ -116,7 +155,7 @@ namespace FlatNode.Editor
         /// <summary>
         /// 生成parse input端口信息的代码
         /// </summary>
-        private void GenerateNodeInputParseCode()
+        private void GenerateNodeInputParseCode(bool generateNodeCode)
         {
             WriteLine("private static Dictionary<Type, Action<NodeBase, NodeInputFieldInfo>> inputPortParseFuncDictionary;");
             WriteLine("");
@@ -132,125 +171,129 @@ namespace FlatNode.Editor
             WriteLine("{");
             AddIndent(4);
 
-            for (int i = 0; i < nodeTypeList.Count; i++)
+            if (generateNodeCode)
             {
-                Type nodeType = nodeTypeList[i];
-                NodeInputPortFieldInfo[] nodeInputPortFieldInfos = GetNodeInputPortFieldInfo(nodeType);
-                string nodeTypeName = nodeType.Name;
-                string camelClassName = FirstCharacterToLower(nodeTypeName);
-                if (nodeInputPortFieldInfos == null || nodeInputPortFieldInfos.Length == 0)
+                for (int i = 0; i < nodeTypeList.Count; i++)
                 {
-                    continue;
-                }
-
-                WriteLine("{");
-                AddIndent(4);
-
-                WriteLine(string.Format("typeof({0}),(nodeInstance, inputFieldInfo) =>", nodeTypeName));
-
-                WriteLine("{");
-                AddIndent(4);
-
-                WriteLine(string.Format("{0} {1} = nodeInstance as {0};", nodeTypeName, camelClassName));
-                WriteLine("string inputPortFieldName = inputFieldInfo.FieldName;");
-                WriteLine("int targetNodeId = inputFieldInfo.TargetNodeId;");
-                WriteLine("int targetPortId = inputFieldInfo.TargetPortId;");
-                WriteLine("string valueString = inputFieldInfo.ValueString;");
-
-                WriteLine("");
-
-                for (int j = 0; j < nodeInputPortFieldInfos.Length; j++)
-                {
-                    string fieldName = nodeInputPortFieldInfos[j].fieldName;
-                    Type valueType = nodeInputPortFieldInfos[j].valueType;
-                    string beautifyValueTypeName = Utility.BeautifyTypeName(valueType, true);
-
-                    if (j == 0)
+                    Type nodeType = nodeTypeList[i];
+                    NodeInputPortFieldInfo[] nodeInputPortFieldInfos = GetNodeInputPortFieldInfo(nodeType);
+                    string nodeTypeName = nodeType.Name;
+                    string camelClassName = FirstCharacterToLower(nodeTypeName);
+                    if (nodeInputPortFieldInfos == null || nodeInputPortFieldInfos.Length == 0)
                     {
-                        WriteLine(string.Format("if (inputPortFieldName == \"{0}\")", fieldName));
-                    }
-                    else
-                    {
-                        WriteLine(string.Format("else if (inputPortFieldName == \"{0}\")", fieldName));
+                        continue;
                     }
 
                     WriteLine("{");
                     AddIndent(4);
 
-                    WriteLine("if (targetNodeId >= 0 && targetPortId >= 0)");
+                    WriteLine(string.Format("typeof({0}),(nodeInstance, inputFieldInfo) =>", nodeTypeName));
+
                     WriteLine("{");
                     AddIndent(4);
 
-                    WriteLine(string.Format("{0}.{1} = new NodeInputVariable<{2}>();", camelClassName, fieldName,
-                        beautifyValueTypeName));
-                    WriteLine(string.Format("{0}.{1}.targetNodeId = targetNodeId;", camelClassName, fieldName));
-                    WriteLine(string.Format("{0}.{1}.targetPortId = targetPortId;", camelClassName, fieldName));
+                    WriteLine(string.Format("{0} {1} = nodeInstance as {0};", nodeTypeName, camelClassName));
+                    WriteLine("string inputPortFieldName = inputFieldInfo.FieldName;");
+                    WriteLine("int targetNodeId = inputFieldInfo.TargetNodeId;");
+                    WriteLine("int targetPortId = inputFieldInfo.TargetPortId;");
+                    WriteLine("string valueString = inputFieldInfo.ValueString;");
 
-                    AddIndent(-4);
-                    WriteLine("}");
+                    WriteLine("");
 
-                    if (valueType == typeof(float) || valueType == typeof(int) || valueType == typeof(string) ||
-                        valueType == typeof(bool) || valueType.IsEnum || valueType == typeof(List<int>) ||
-                        valueType == typeof(LayerMaskWrapper) || valueType == typeof(VariableWrapper))
+                    for (int j = 0; j < nodeInputPortFieldInfos.Length; j++)
                     {
-                        WriteLine("else");
+                        string fieldName = nodeInputPortFieldInfos[j].fieldName;
+                        Type valueType = nodeInputPortFieldInfos[j].valueType;
+                        string beautifyValueTypeName = Utility.BeautifyTypeName(valueType, true);
+
+                        if (j == 0)
+                        {
+                            WriteLine(string.Format("if (inputPortFieldName == \"{0}\")", fieldName));
+                        }
+                        else
+                        {
+                            WriteLine(string.Format("else if (inputPortFieldName == \"{0}\")", fieldName));
+                        }
+
                         WriteLine("{");
                         AddIndent(4);
-                        
+
+                        WriteLine("if (targetNodeId >= 0 && targetPortId >= 0)");
+                        WriteLine("{");
+                        AddIndent(4);
+
                         WriteLine(string.Format("{0}.{1} = new NodeInputVariable<{2}>();", camelClassName, fieldName,
                             beautifyValueTypeName));
-                        
-                        if (valueType == typeof(float))
+                        WriteLine(string.Format("{0}.{1}.targetNodeId = targetNodeId;", camelClassName, fieldName));
+                        WriteLine(string.Format("{0}.{1}.targetPortId = targetPortId;", camelClassName, fieldName));
+
+                        AddIndent(-4);
+                        WriteLine("}");
+
+                        if (valueType == typeof(float) || valueType == typeof(int) || valueType == typeof(string) ||
+                            valueType == typeof(bool) || valueType.IsEnum || valueType == typeof(List<int>) ||
+                            valueType == typeof(LayerMaskWrapper) || valueType == typeof(VariableWrapper))
                         {
-                            WriteLine(string.Format("{0}.{1}.value = float.Parse(valueString);", camelClassName, fieldName));
-                        }
-                        else if (valueType == typeof(int))
-                        {
-                            WriteLine(string.Format("{0}.{1}.value = int.Parse(valueString);", camelClassName, fieldName));
-                        }
-                        else if (valueType == typeof(string))
-                        {
-                            WriteLine(string.Format("{0}.{1}.value = valueString;", camelClassName, fieldName));
-                        }
-                        else if (valueType == typeof(bool))
-                        {
-                            WriteLine(string.Format("{0}.{1}.value = Boolean.Parse(valueString);", camelClassName, fieldName));
-                        }
-                        else if (valueType.IsEnum)
-                        {
-                            WriteLine(string.Format("{0}.{1}.value = ({2})Enum.Parse(typeof({2}), valueString);", camelClassName,
-                                fieldName, beautifyValueTypeName));
-                        }
-                        else if (valueType == typeof(List<int>))
-                        {
-                            WriteLine(string.Format("{0}.{1}.value = ParseIntList(valueString);", camelClassName, fieldName));
-                        }
-                        else if (valueType == typeof(LayerMaskWrapper))
-                        {
-                            WriteLine("LayerMaskWrapper layerMaskWrapper = valueString;");
-                            WriteLine(string.Format("{0}.{1}.value = layerMaskWrapper;", camelClassName, fieldName));
-                        }
-                        else if (valueType == typeof(VariableWrapper))
-                        {
-                            WriteLine("int variableId = int.Parse(valueString);");
-                            WriteLine("VariableWrapper variableWrapper = variableId;");
-                            WriteLine(string.Format("{0}.{1}.value = variableWrapper;", camelClassName, fieldName));
+                            WriteLine("else");
+                            WriteLine("{");
+                            AddIndent(4);
+
+                            WriteLine(string.Format("{0}.{1} = new NodeInputVariable<{2}>();", camelClassName, fieldName,
+                                beautifyValueTypeName));
+
+                            if (valueType == typeof(float))
+                            {
+                                WriteLine(string.Format("{0}.{1}.value = float.Parse(valueString);", camelClassName, fieldName));
+                            }
+                            else if (valueType == typeof(int))
+                            {
+                                WriteLine(string.Format("{0}.{1}.value = int.Parse(valueString);", camelClassName, fieldName));
+                            }
+                            else if (valueType == typeof(string))
+                            {
+                                WriteLine(string.Format("{0}.{1}.value = valueString;", camelClassName, fieldName));
+                            }
+                            else if (valueType == typeof(bool))
+                            {
+                                WriteLine(string.Format("{0}.{1}.value = Boolean.Parse(valueString);", camelClassName,
+                                    fieldName));
+                            }
+                            else if (valueType.IsEnum)
+                            {
+                                WriteLine(string.Format("{0}.{1}.value = ({2})Enum.Parse(typeof({2}), valueString);",
+                                    camelClassName, fieldName, beautifyValueTypeName));
+                            }
+                            else if (valueType == typeof(List<int>))
+                            {
+                                WriteLine(string.Format("{0}.{1}.value = ParseIntList(valueString);", camelClassName, fieldName));
+                            }
+                            else if (valueType == typeof(LayerMaskWrapper))
+                            {
+                                WriteLine("LayerMaskWrapper layerMaskWrapper = valueString;");
+                                WriteLine(string.Format("{0}.{1}.value = layerMaskWrapper;", camelClassName, fieldName));
+                            }
+                            else if (valueType == typeof(VariableWrapper))
+                            {
+                                WriteLine("int variableId = int.Parse(valueString);");
+                                WriteLine("VariableWrapper variableWrapper = variableId;");
+                                WriteLine(string.Format("{0}.{1}.value = variableWrapper;", camelClassName, fieldName));
+                            }
+
+                            AddIndent(-4);
+                            WriteLine("}");
                         }
 
                         AddIndent(-4);
                         WriteLine("}");
                     }
 
+
                     AddIndent(-4);
                     WriteLine("}");
+
+                    AddIndent(-4);
+                    WriteLine("},");
                 }
-
-
-                AddIndent(-4);
-                WriteLine("}");
-
-                AddIndent(-4);
-                WriteLine("},");
             }
 
             AddIndent(-4);
@@ -263,7 +306,7 @@ namespace FlatNode.Editor
         /// <summary>
         /// 生出初始化输出函数数组的代码
         /// </summary>
-        private void GenerateOutputFuncInitCode()
+        private void GenerateOutputFuncInitCode(bool generateNodeCode)
         {
             WriteLine("private static Dictionary<Type, Action<NodeBase>> nodeOutputInitFuncDictionary;");
             WriteLine("private static void InitOutputFuncsDictionary()");
@@ -282,44 +325,46 @@ namespace FlatNode.Editor
             WriteLine("{");
             AddIndent(4);
 
-
-            for (int i = 0; i < nodeTypeList.Count; i++)
+            if (generateNodeCode)
             {
-                Type nodeType = nodeTypeList[i];
-                NodeOutputMethodInfo[] outputMethodInfos = GetSortedOutputMethod(nodeType);
-                if (outputMethodInfos == null || outputMethodInfos.Length == 0)
+                for (int i = 0; i < nodeTypeList.Count; i++)
                 {
-                    continue;
+                    Type nodeType = nodeTypeList[i];
+                    NodeOutputMethodInfo[] outputMethodInfos = GetSortedOutputMethod(nodeType);
+                    if (outputMethodInfos == null || outputMethodInfos.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    WriteLine("{");
+                    AddIndent(4);
+                    string typeName = nodeType.Name;
+                    WriteLine(string.Format("typeof({0}),nodeInstance =>", nodeType.Name));
+                    WriteLine("{");
+
+                    AddIndent(4);
+
+                    string camelClassName = FirstCharacterToLower(typeName);
+                    WriteLine(string.Format("{0} {1} = nodeInstance as {0};", nodeType.Name, camelClassName));
+                    WriteLine(string.Format("{0}.outputPortFuncs = new Func<NodeVariable>[]", camelClassName));
+                    WriteLine("{");
+                    AddIndent(4);
+
+                    //把所有的方法名写进去
+                    for (int j = 0; j < outputMethodInfos.Length; j++)
+                    {
+                        WriteLine(string.Format("{0}.{1},", camelClassName, outputMethodInfos[j].methodInfo.Name));
+                    }
+
+                    AddIndent(-4);
+                    WriteLine("};");
+
+                    AddIndent(-4);
+
+                    WriteLine("}");
+                    AddIndent(-4);
+                    WriteLine("},");
                 }
-
-                WriteLine("{");
-                AddIndent(4);
-                string typeName = nodeType.Name;
-                WriteLine(string.Format("typeof({0}),nodeInstance =>", nodeType.Name));
-                WriteLine("{");
-
-                AddIndent(4);
-
-                string camelClassName = FirstCharacterToLower(typeName);
-                WriteLine(string.Format("{0} {1} = nodeInstance as {0};", nodeType.Name, camelClassName));
-                WriteLine(string.Format("{0}.outputPortFuncs = new Func<NodeVariable>[]", camelClassName));
-                WriteLine("{");
-                AddIndent(4);
-
-                //把所有的方法名写进去
-                for (int j = 0; j < outputMethodInfos.Length; j++)
-                {
-                    WriteLine(string.Format("{0}.{1},", camelClassName, outputMethodInfos[j].methodInfo.Name));
-                }
-
-                AddIndent(-4);
-                WriteLine("};");
-
-                AddIndent(-4);
-
-                WriteLine("}");
-                AddIndent(-4);
-                WriteLine("},");
             }
 
             AddIndent(-4);
@@ -335,14 +380,14 @@ namespace FlatNode.Editor
                 return;
             }
 
-            string fileDirectoryPath = Directory.GetParent(outputFilePath).FullName;
+            string fileDirectoryPath = Directory.GetParent(OutputFilePath).FullName;
             Debug.Log(fileDirectoryPath);
             if (!Directory.Exists(fileDirectoryPath))
             {
                 Directory.CreateDirectory(fileDirectoryPath);
             }
 
-            File.WriteAllText(outputFilePath, sb.ToString());
+            File.WriteAllText(OutputFilePath, sb.ToString());
         }
 
         private void WriteLine(string line)

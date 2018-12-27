@@ -282,14 +282,12 @@ namespace FlatNode.Editor
                     layerMaskWrapperValue = new LayerMaskWrapper();
                 }
 
-                string[] gameLayerNames = Utility.GetGameLayerNames();
+                string[] gameLayerNames = Utility.GetUnityLayerNames();
 
-                int layerMaskValue = Utility.ConvertUnityLayerToEditorGameLayer(layerMaskWrapperValue.layer);
-                layerMaskValue = EditorGUI.MaskField(labelInputAreaRect, layerMaskValue, gameLayerNames);
+                int selectLayer = EditorGUI.MaskField(labelInputAreaRect, layerMaskWrapperValue.layer, gameLayerNames);
                 if (EditorGUI.EndChangeCheck())
                 {
-                    layerMaskValue = Utility.ConvertEditorGameLayerToUnityLayer(layerMaskValue);
-                    layerMaskWrapperValue.layer = layerMaskValue;
+                    layerMaskWrapperValue.layer = selectLayer;
 //                    Debug.Log("select layer mask: " + layerMaskValue);
                     inputPortReflectionInfo.SetInputNodeVariableValue(layerMaskWrapperValue);
                 }
@@ -351,7 +349,7 @@ namespace FlatNode.Editor
             }
         }
 
-        public void OnSkillVariableListChange()
+        public void OnGraphVariableListChange()
         {
             if (inputPortReflectionInfo.inputValueType != typeof(VariableWrapper))
             {

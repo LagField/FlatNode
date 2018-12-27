@@ -2,7 +2,7 @@
 
 namespace FlatNode.Runtime
 {
-	[SkillNode("打印日志","Debug/Log","输出到Unity日志")]
+	[GraphNode("打印日志","Debug/Log","输出到Unity日志")]
 	[NodeFlowOutPortDefine(0,"结束")]
 	public class LogNode : NodeBase
 	{

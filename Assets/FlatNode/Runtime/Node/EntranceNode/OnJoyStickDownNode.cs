@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FlatNode.Runtime
 {
-	[SkillNode("OnJoyStickDown","EntranceNodes/OnJoyStickDown","按下摇杆时",isEntranceNode = true)]
+	[GraphNode("OnJoyStickDown","EntranceNodes/OnJoyStickDown","按下摇杆时",isEntranceNode = true)]
 	[NodeFlowOutPortDefine(0, "按下摇杆时")]
 	public class OnJoyStickDownNode : EntranceNodeBase
 	{

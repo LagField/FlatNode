@@ -32,7 +32,7 @@ namespace FlatNode.Runtime
     /// <summary>
     /// 从技能中获取临时变量
     /// </summary>
-    [SkillNode("获取变量","Variable/GetVariable","获取技能的临时变量",hasFlowIn = false)]
+    [GraphNode("获取变量","Variable/GetVariable","获取技能的临时变量",hasFlowIn = false)]
     public class GetVariableNode : SkillVariableNodeBase
     {
         [NodeInputPort(0,"读变量")]
@@ -49,7 +49,7 @@ namespace FlatNode.Runtime
     /// <summary>
     /// 将临时变量写入技能
     /// </summary>
-    [SkillNode("写入变量","Variable/SetVariable","将内容写入临时变量")]
+    [GraphNode("写入变量","Variable/SetVariable","将内容写入临时变量")]
     [NodeFlowOutPortDefine(0,"完成")]
     public class SetVariableNode : SkillVariableNodeBase
     {

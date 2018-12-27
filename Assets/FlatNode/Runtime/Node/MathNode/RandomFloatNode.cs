@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FlatNode.Runtime
 {
-    [SkillNode("RandomFloat", "Math/RandomFloat", "随机一个浮点数", hasFlowIn = false)]
+    [GraphNode("RandomFloat", "Math/RandomFloat", "随机一个浮点数", hasFlowIn = false)]
     public class RandomFloatNode : NodeBase
     {
         [NodeInputPort(0, "最小", "包含")] public NodeInputVariable<float> minInputVariable;

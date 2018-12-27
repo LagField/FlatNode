@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FlatNode.Runtime
 {
-	[SkillNode("NormalizeVector","Math/NormalizeVector",hasFlowIn = false)]
+	[GraphNode("NormalizeVector","Math/NormalizeVector",hasFlowIn = false)]
 	public class NormalizeVectorNode : NodeBase
 	{
 		[NodeInputPort(0,"Vector2")]

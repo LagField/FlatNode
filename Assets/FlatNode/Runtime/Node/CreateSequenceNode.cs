@@ -7,7 +7,7 @@ namespace FlatNode.Runtime
 	/// <summary>
 	/// 这个节点每次在执行子节点时，会创建一个新的skillsequence或者执行之前执行完成的skillsequence
 	/// </summary>
-	[SkillNode("CreateSequence","CreateSequence","这个节点每次在执行子节点时，会执行之前执行完成的skillsequence或者创建一个新的skillsequence")]
+	[GraphNode("CreateSequence","CreateSequence","这个节点每次在执行子节点时，会执行之前执行完成的skillsequence或者创建一个新的skillsequence")]
 	[NodeFlowOutPortDefine(0,"创建序列")]
 	public class CreateSequenceNode : NodeBase
 	{

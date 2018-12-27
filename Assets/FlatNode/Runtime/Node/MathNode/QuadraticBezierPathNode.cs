@@ -6,7 +6,7 @@ namespace FlatNode.Runtime
 	/// <summary>
 	/// 计算贝塞尔曲线路径点
 	/// </summary>
-	[SkillNode("计算曲线路径点","Math/QuadraticBezierPath","计算贝塞尔曲线(Quadratic)的路径点")]
+	[GraphNode("计算曲线路径点","Math/QuadraticBezierPath","计算贝塞尔曲线(Quadratic)的路径点")]
 	[NodeFlowOutPortDefine(0,"计算完成")]
 	public class QuadraticBezierPathNode : NodeBase
 	{

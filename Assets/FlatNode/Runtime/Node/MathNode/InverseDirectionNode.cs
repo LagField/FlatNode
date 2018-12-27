@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FlatNode.Runtime
 {
-	[SkillNode("反转方向","Math/InverseDirection",hasFlowIn = false)]
+	[GraphNode("反转方向","Math/InverseDirection",hasFlowIn = false)]
 	public class InverseDirectionNode : NodeBase
 	{
 		[NodeInputPort(0,"输入方向")]

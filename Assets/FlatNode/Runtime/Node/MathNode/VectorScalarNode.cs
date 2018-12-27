@@ -2,7 +2,7 @@
 
 namespace FlatNode.Runtime
 {
-	[SkillNode("缩放Vector","Math/VectorScalar",hasFlowIn = false)]
+	[GraphNode("缩放Vector","Math/VectorScalar",hasFlowIn = false)]
 	public class VectorScalarNode : NodeBase
 	{
 		[NodeInputPort(0,"输入Vector2")]

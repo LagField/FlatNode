@@ -2,7 +2,7 @@
 
 namespace FlatNode.Runtime
 {
-	[SkillNode("向量Vector3加减","Math/VectorAdd","a 加/减 b",hasFlowIn = false)]
+	[GraphNode("向量Vector3加减","Math/VectorAdd","a 加/减 b",hasFlowIn = false)]
 	public class VectorAddNode : NodeBase
 	{
 		public enum CalculateType

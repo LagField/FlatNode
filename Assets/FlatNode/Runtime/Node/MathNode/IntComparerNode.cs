@@ -9,7 +9,7 @@
 		Greater = 4,// >
 	}
 	
-	[SkillNode("int比较","Math/IntComparer","a compare b",hasFlowIn = false)]
+	[GraphNode("int比较","Math/IntComparer","a compare b",hasFlowIn = false)]
 	public class IntComparerNode : NodeBase
 	{
 		[NodeInputPort(0,"a")]

@@ -1,6 +1,6 @@
 ﻿namespace FlatNode.Runtime
 {
-	[SkillNode("if","FlowControl/if")]
+	[GraphNode("if","FlowControl/if")]
 	[NodeFlowOutPortDefine(0,"true")]
 	[NodeFlowOutPortDefine(1,"false")]
 	public class IfNode : NodeBase

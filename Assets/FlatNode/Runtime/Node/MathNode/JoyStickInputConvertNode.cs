@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FlatNode.Runtime
 {
-	[SkillNode("转换摇杆输入","Math/JoyStickInputConvert","摇杆的输入是一个Vector2，将该v2的x和y分别放入vector3的x和z",hasFlowIn = false)]
+	[GraphNode("转换摇杆输入","Math/JoyStickInputConvert","摇杆的输入是一个Vector2，将该v2的x和y分别放入vector3的x和z",hasFlowIn = false)]
 	public class JoyStickInputConvertNode : NodeBase
 	{
 		[NodeInputPort(0,"Vector2")]

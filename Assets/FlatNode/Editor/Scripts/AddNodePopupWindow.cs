@@ -466,12 +466,12 @@ namespace FlatNode.Editor
             for (int i = 0; i < skillNodeTypeList.Count; i++)
             {
                 Type nodeType = skillNodeTypeList[i];
-                object[] attributeObjects = nodeType.GetCustomAttributes(typeof(SkillNodeAttribute),false);
+                object[] attributeObjects = nodeType.GetCustomAttributes(typeof(GraphNodeAttribute),false);
                 if (attributeObjects.Length == 0)
                 {
                     continue;
                 }
-                SkillNodeAttribute nodeAttribute = attributeObjects[0] as SkillNodeAttribute;
+                GraphNodeAttribute nodeAttribute = attributeObjects[0] as GraphNodeAttribute;
 
                 MenuItem newItem = new MenuItem();
                 newItem.ItemType = nodeType;

@@ -12,13 +12,13 @@ namespace FlatNode.Editor
         public class NodeInformation
         {
             public Type type;
-            public SkillNodeAttribute attribute;
+            public GraphNodeAttribute attribute;
 
             public string nodeScriptName;
             public string nodeName;
             public string nodeDescription;
 
-            public NodeInformation(Type type, SkillNodeAttribute attribute)
+            public NodeInformation(Type type, GraphNodeAttribute attribute)
             {
                 this.type = type;
                 this.attribute = attribute;
@@ -56,13 +56,13 @@ namespace FlatNode.Editor
             {
                 Type type = nodeTypeList[i];
 
-                object[] attributeObjects = type.GetCustomAttributes(typeof(SkillNodeAttribute), false);
+                object[] attributeObjects = type.GetCustomAttributes(typeof(GraphNodeAttribute), false);
                 if (attributeObjects.Length == 0)
                 {
                     continue;
                 }
 
-                SkillNodeAttribute attribute = attributeObjects[0] as SkillNodeAttribute;
+                GraphNodeAttribute attribute = attributeObjects[0] as GraphNodeAttribute;
                 nodeInfoList.Add(new NodeInformation(type, attribute));
             }
             

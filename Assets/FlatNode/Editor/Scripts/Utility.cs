@@ -185,7 +185,7 @@ namespace FlatNode.Editor
                 for (int typeIndex = 0; typeIndex < types.Length; typeIndex++)
                 {
                     Type targetType = types[typeIndex];
-                    object[] attributes = targetType.GetCustomAttributes(typeof(SkillNodeAttribute), false);
+                    object[] attributes = targetType.GetCustomAttributes(typeof(GraphNodeAttribute), false);
                     if (attributes.Length > 0)
                     {
                         resultList.Add(targetType);
@@ -203,130 +203,63 @@ namespace FlatNode.Editor
         private static EditorLayerInfo[] editorLayerInfos;
 
         #region LayerMaskHelper
+
+        /// <summary>
+        /// 缓存当前工程layer名字
+        /// </summary>
+        private static string[] unityLayerNames;
         
-        public static class GameLayer
-        {
-            public static int Player = 1 << 8;
-            public static int Enemy = 1 << 9;
-        }
-
-        public static void InitLayerInfos()
-        {
-            if (editorLayerInfos == null)
-            {
-                Type gameLayerType = typeof(GameLayer);
-                FieldInfo[] fieldInfos = gameLayerType.GetFields(BindingFlags.Static | BindingFlags.Public);
-
-                editorLayerInfos = new EditorLayerInfo[fieldInfos.Length];
-                for (int i = 0; i < editorLayerInfos.Length; i++)
-                {
-                    EditorLayerInfo layerInfo = new EditorLayerInfo();
-                    FieldInfo fieldInfo = fieldInfos[i];
-
-                    string fieldName = fieldInfo.Name;
-                    int fieldValue = (int) fieldInfo.GetRawConstantValue();
-
-                    layerInfo.layerName = fieldName;
-                    layerInfo.layerValue = fieldValue;
-
-                    editorLayerInfos[i] = layerInfo;
-                }
-            }
-        }
-
-        private static string[] gameLayerNames;
-
-        public static string[] GetGameLayerNames()
-        {
-            if (gameLayerNames == null)
-            {
-                Type gameLayerType = typeof(GameLayer);
-                FieldInfo[] fieldInfos = gameLayerType.GetFields(BindingFlags.Static | BindingFlags.Public);
-
-                gameLayerNames = new string[fieldInfos.Length];
-                for (int i = 0; i < fieldInfos.Length; i++)
-                {
-                    FieldInfo fieldInfo = fieldInfos[i];
-
-                    string fieldName = fieldInfo.Name;
-                    gameLayerNames[i] = fieldName;
-                }
-            }
-
-            return gameLayerNames;
-        }
-
         /// <summary>
-        /// 编辑器中使用MaskField来进行Layer的多选。
-        /// 但是MaskField返回的值是从1开始为第一个Layer
-        /// 需要转换到从8是第一个Layer
-        /// Unity中Layer，0表示Nothing，-1表示Everything，其他Layer从n = 0开始往后依次为 1 << n
+        /// 获取Unity Layer名称
         /// </summary>
-        /// <param name="editorGameLayerValue"></param>
         /// <returns></returns>
-        public static int ConvertEditorGameLayerToUnityLayer(int editorGameLayerValue)
+        public static string[] GetUnityLayerNames()
         {
-            InitLayerInfos();
-
-            int result = 0;
-            if (editorGameLayerValue == -1)
+            if (unityLayerNames == null)
             {
-                return -1;
-            }
-
-            for (int i = 0; i < editorLayerInfos.Length; i++)
-            {
-                //检查第i位是否为1
-                if ((editorGameLayerValue & 1 << i) != 0)
+                List<string> layerNameList = new List<string>();
+                for (int i = 0; i < 32; i++)
                 {
-                    result |= editorLayerInfos[i].layerValue;
+                    string layerName = LayerMask.LayerToName(i);
+                    if (string.IsNullOrEmpty(layerName))
+                    {
+                        continue;
+                    }
+                
+                    layerNameList.Add(layerName);
                 }
+
+                unityLayerNames = layerNameList.ToArray();
             }
-
-            return result;
-        }
-
-        /// <summary>
-        /// 解释见<see cref="ConvertEditorGameLayerToUnityLayer"/>
-        /// </summary>
-        /// <param name="unityLayerValue"></param>
-        /// <returns></returns>
-        public static int ConvertUnityLayerToEditorGameLayer(int unityLayerValue)
-        {
-            InitLayerInfos();
-
-            int result = 0;
-            if (unityLayerValue == -1)
-            {
-                return -1;
-            }
-
-            for (int i = 0; i < editorLayerInfos.Length; i++)
-            {
-                EditorLayerInfo editorLayerInfo = editorLayerInfos[i];
-
-                //检查该位置是否为1
-                if ((unityLayerValue & editorLayerInfo.layerValue) != 0)
-                {
-                    result |= 1 << i;
-                }
-            }
-
-            return result;
+            return unityLayerNames;
+//            
+//            if (gameLayerNames == null)
+//            {
+//                Type gameLayerType = typeof(GameLayer);
+//                FieldInfo[] fieldInfos = gameLayerType.GetFields(BindingFlags.Static | BindingFlags.Public);
+//
+//                gameLayerNames = new string[fieldInfos.Length];
+//                for (int i = 0; i < fieldInfos.Length; i++)
+//                {
+//                    FieldInfo fieldInfo = fieldInfos[i];
+//
+//                    string fieldName = fieldInfo.Name;
+//                    gameLayerNames[i] = fieldName;
+//                }
+//            }
+//
+//            return gameLayerNames;
         }
 
         public static int GetLayerMaxGuiLength(int singleCharWidth = 5)
         {
-            Type gameLayerType = typeof(GameLayer);
-            FieldInfo[] fieldInfos = gameLayerType.GetFields(BindingFlags.Static | BindingFlags.Public);
+            string[] layerNames = GetUnityLayerNames();
 
             int maxLength = 0;
-            for (int i = 0; i < fieldInfos.Length; i++)
+            for (int i = 0; i < layerNames.Length; i++)
             {
-                FieldInfo fieldInfo = fieldInfos[i];
-
-                string fieldName = fieldInfo.Name;
-                int length = fieldName.Length;
+                string layerName = layerNames[i];
+                int length = layerName.Length;
 
                 if (length > maxLength)
                 {

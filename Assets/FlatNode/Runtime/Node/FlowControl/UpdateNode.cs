@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FlatNode.Runtime
 {
-	[SkillNode("Update","FlowControl/Update","该节点不会自动停止")]
+	[GraphNode("Update","FlowControl/Update","该节点不会自动停止")]
 	[NodeFlowOutPortDefine(0,"每一次update")]
 	public class UpdateNode : NodeBase
 	{

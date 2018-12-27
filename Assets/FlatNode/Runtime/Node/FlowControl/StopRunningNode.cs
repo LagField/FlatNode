@@ -2,7 +2,7 @@
 
 namespace FlatNode.Runtime
 {
-    [SkillNode("停止运行节点","FlowControl/StopRunningNodes","停止整个技能当中特定的节点运行")]
+    [GraphNode("停止运行节点","FlowControl/StopRunningNodes","停止整个技能当中特定的节点运行")]
     [NodeFlowOutPortDefine(0,"完成")]
     public class StopRunningNode : NodeBase
     {

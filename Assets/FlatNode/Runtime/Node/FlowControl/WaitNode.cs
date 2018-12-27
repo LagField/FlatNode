@@ -2,7 +2,7 @@
 
 namespace FlatNode.Runtime
 {
-    [SkillNode("等待","FlowControl/Wait")]
+    [GraphNode("等待","FlowControl/Wait")]
     [NodeFlowOutPortDefine(0,"等待结束时")]
     public class WaitNode : NodeBase
     {

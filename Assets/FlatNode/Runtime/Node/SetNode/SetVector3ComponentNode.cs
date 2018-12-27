@@ -8,7 +8,7 @@ namespace FlatNode.Runtime
         Y = 1,
         Z = 2
     }
-    [SkillNode("设置Vector3分量","Set/SetVector3Component",hasFlowIn = false)]
+    [GraphNode("设置Vector3分量","Set/SetVector3Component",hasFlowIn = false)]
     public class SetVector3ComponentNode : NodeBase
     {
         [NodeInputPort(0,"v3")]

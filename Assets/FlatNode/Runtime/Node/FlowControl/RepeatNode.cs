@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace FlatNode.Runtime
 {
-    [SkillNode("重复执行","FlowControl/Repeat")]
+    [GraphNode("重复执行","FlowControl/Repeat")]
     [NodeFlowOutPortDefine(0,"每一次执行时")]
     [NodeFlowOutPortDefine(1,"重复执行完成时")]
     public class RepeatNode : NodeBase

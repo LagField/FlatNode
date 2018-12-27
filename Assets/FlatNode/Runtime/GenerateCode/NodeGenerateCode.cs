@@ -631,97 +631,15 @@ namespace FlatNode.Runtime
                         {
                             if (targetNodeId >= 0 && targetPortId >= 0)
                             {
-                                testNode.damageInputVariable = new NodeInputVariable<float>();
+                                testNode.damageInputVariable = new NodeInputVariable<FlatNode.Runtime.LayerMaskWrapper>();
                                 testNode.damageInputVariable.targetNodeId = targetNodeId;
                                 testNode.damageInputVariable.targetPortId = targetPortId;
                             }
                             else
                             {
-                                testNode.damageInputVariable = new NodeInputVariable<float>();
-                                testNode.damageInputVariable.value = float.Parse(valueString);
-                            }
-                        }
-                        else if (inputPortFieldName == "displacementDistanceVariable")
-                        {
-                            if (targetNodeId >= 0 && targetPortId >= 0)
-                            {
-                                testNode.displacementDistanceVariable = new NodeInputVariable<float>();
-                                testNode.displacementDistanceVariable.targetNodeId = targetNodeId;
-                                testNode.displacementDistanceVariable.targetPortId = targetPortId;
-                            }
-                            else
-                            {
-                                testNode.displacementDistanceVariable = new NodeInputVariable<float>();
-                                testNode.displacementDistanceVariable.value = float.Parse(valueString);
-                            }
-                        }
-                        else if (inputPortFieldName == "displayTextInputVariable")
-                        {
-                            if (targetNodeId >= 0 && targetPortId >= 0)
-                            {
-                                testNode.displayTextInputVariable = new NodeInputVariable<bool>();
-                                testNode.displayTextInputVariable.targetNodeId = targetNodeId;
-                                testNode.displayTextInputVariable.targetPortId = targetPortId;
-                            }
-                            else
-                            {
-                                testNode.displayTextInputVariable = new NodeInputVariable<bool>();
-                                testNode.displayTextInputVariable.value = Boolean.Parse(valueString);
-                            }
-                        }
-                        else if (inputPortFieldName == "skillDirection")
-                        {
-                            if (targetNodeId >= 0 && targetPortId >= 0)
-                            {
-                                testNode.skillDirection = new NodeInputVariable<UnityEngine.Vector3>();
-                                testNode.skillDirection.targetNodeId = targetNodeId;
-                                testNode.skillDirection.targetPortId = targetPortId;
-                            }
-                        }
-                        else if (inputPortFieldName == "directionSpace")
-                        {
-                            if (targetNodeId >= 0 && targetPortId >= 0)
-                            {
-                                testNode.directionSpace = new NodeInputVariable<UnityEngine.Space>();
-                                testNode.directionSpace.targetNodeId = targetNodeId;
-                                testNode.directionSpace.targetPortId = targetPortId;
-                            }
-                            else
-                            {
-                                testNode.directionSpace = new NodeInputVariable<UnityEngine.Space>();
-                                testNode.directionSpace.value = (UnityEngine.Space)Enum.Parse(typeof(UnityEngine.Space), valueString);
-                            }
-                        }
-                        else if (inputPortFieldName == "collsiionMode")
-                        {
-                            if (targetNodeId >= 0 && targetPortId >= 0)
-                            {
-                                testNode.collsiionMode = new NodeInputVariable<UnityEngine.CollisionDetectionMode>();
-                                testNode.collsiionMode.targetNodeId = targetNodeId;
-                                testNode.collsiionMode.targetPortId = targetPortId;
-                            }
-                            else
-                            {
-                                testNode.collsiionMode = new NodeInputVariable<UnityEngine.CollisionDetectionMode>();
-                                testNode.collsiionMode.value = (UnityEngine.CollisionDetectionMode)Enum.Parse(typeof(UnityEngine.CollisionDetectionMode), valueString);
-                            }
-                        }
-                        else if (inputPortFieldName == "bulletObject")
-                        {
-                            if (targetNodeId >= 0 && targetPortId >= 0)
-                            {
-                                testNode.bulletObject = new NodeInputVariable<UnityEngine.GameObject>();
-                                testNode.bulletObject.targetNodeId = targetNodeId;
-                                testNode.bulletObject.targetPortId = targetPortId;
-                            }
-                        }
-                        else if (inputPortFieldName == "bulletRotation")
-                        {
-                            if (targetNodeId >= 0 && targetPortId >= 0)
-                            {
-                                testNode.bulletRotation = new NodeInputVariable<UnityEngine.Quaternion>();
-                                testNode.bulletRotation.targetNodeId = targetNodeId;
-                                testNode.bulletRotation.targetPortId = targetPortId;
+                                testNode.damageInputVariable = new NodeInputVariable<FlatNode.Runtime.LayerMaskWrapper>();
+                                LayerMaskWrapper layerMaskWrapper = valueString;
+                                testNode.damageInputVariable.value = layerMaskWrapper;
                             }
                         }
                     }
@@ -911,18 +829,6 @@ namespace FlatNode.Runtime
                         setVector3ComponentNode.outputPortFuncs = new Func<NodeVariable>[]
                         {
                             setVector3ComponentNode.GetVector3Result,
-                        };
-                    }
-                },
-                {
-                    typeof(TestNode),nodeInstance =>
-                    {
-                        TestNode testNode = nodeInstance as TestNode;
-                        testNode.outputPortFuncs = new Func<NodeVariable>[]
-                        {
-                            testNode.GetNeutralizedDamagedVariable,
-                            testNode.GetDamagedVariable,
-                            testNode.TypeTestOutput,
                         };
                     }
                 },
