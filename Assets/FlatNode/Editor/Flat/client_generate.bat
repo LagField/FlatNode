@@ -5,7 +5,7 @@ set flatdirectory=D:\UnityProjects\FlatNode\FlatNode\Assets\FlatNode\Editor\Flat
 set csharpoutputdirectory=D:\UnityProjects\FlatNode\FlatNode\Assets\FlatNode\Runtime\FlatGenerate\
 
 flatc -n -o %csharpoutputdirectory%^
- %flatdirectory%SkillSerialize.fbs^
+ %flatdirectory%FlatNodeConfig.fbs^
  --gen-onefile
 
 echo "Done!"
